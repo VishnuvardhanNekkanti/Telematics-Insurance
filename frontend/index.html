@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telematics Insurance Analyzer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f2f4f8;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 12px 20px;
+            width: 100%;
+            background: #3498db;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+
+        .results h3 {
+            margin-top: 0;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Telematics Insurance Analyzer</h1>
+
+        <label for="avg_speed">Average Speed (km/h)</label>
+        <input type="number" id="avg_speed" required />
+
+        <label for="harsh_brakes">Harsh Brakes Count</label>
+        <input type="number" id="harsh_brakes" required />
+
+        <label for="night_drives">Night Drives (per week)</label>
+        <input type="number" id="night_drives" required />
+
+        <label for="phone_usage">Phone Usage While Driving (instances)</label>
+        <input type="number" id="phone_usage" required />
+
+        <button onclick="analyzeData()">Analyze Risk</button>
+
+        <div class="results" id="results" style="display:none;">
+            <h3>Results:</h3>
+            <p><strong>Risk Score:</strong> <span id="risk_score"></span></p>
+            <p><strong>Adjusted Premium:</strong> ₹<span id="adjusted_premium"></span></p>
+            <p><strong>AI Safety Tips:</strong></p>
+            <pre id="safety_tips"></pre>
+        </div>
+    </div>
+
+    <script>
+        async function analyzeData() {
+            const avg_speed = parseInt(document.getElementById('avg_speed').value);
+            const harsh_brakes = parseInt(document.getElementById('harsh_brakes').value);
+            const night_drives = parseInt(document.getElementById('night_drives').value);
+            const phone_usage = parseInt(document.getElementById('phone_usage').value);
+
+            const data = {
+                avg_speed,
+                harsh_brakes,
+                night_drives,
+                phone_usage
+            };
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/analyze", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                document.getElementById("results").style.display = "block";
+                document.getElementById("risk_score").innerText = result.risk_score;
+                document.getElementById("adjusted_premium").innerText = result.adjusted_premium;
+                document.getElementById("safety_tips").innerText = result.safety_tips;
+
+            } catch (error) {
+                alert("Something went wrong. Please check your backend is running.");
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+
+</html>
