@@ -59,5 +59,5 @@ Before running the application, please follow these steps:
 
 ### 2️⃣ Create a `.env` File
 
-In the **root directory** (where `app.py` exists), create a file named:
+In the **root directory** (where `app.py` exists)
 
